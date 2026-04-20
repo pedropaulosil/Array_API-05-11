@@ -1,310 +1,431 @@
 <!DOCTYPE html>
-<html lang="pt-pt">
+<html lang="pt-BR">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>PaísesSearch | Explorador Global</title>
-    <style>
-        /* Variáveis de Cores e Estilos */
-        :root {
-            --primary-blue: #3b82f6;
-            --primary-green: #22c55e;
-            --pure-white: #ffffff;
-            --dark-overlay: rgba(2, 6, 23, 0.8);
-            --glass-bg: rgba(15, 23, 42, 0.85);
-            --text-muted: #94a3b8;
-        }
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>ARRAY — Países do Mundo</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@300;400;600;700;800&family=Nunito+Mono:wght@400;600&display=swap" rel="stylesheet">
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    :root {
+      --bg: #f0f6ff;
+      --surface: #ffffff;
+      --blue: #1a56db;
+      --blue-dark: #1240a8;
+      --blue-light: #dbeafe;
+      --green: #16a34a;
+      --green-light: #dcfce7;
+      --text: #0f172a;
+      --muted: #64748b;
+      --border: #cbd5e1;
+      --sans: 'Nunito', sans-serif;
+      --mono: 'Nunito Mono', monospace;
+    }
+    body { background: var(--bg); color: var(--text); font-family: var(--sans); min-height: 100vh; }
 
-        /* Configuração Base */
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-            font-family: 'Inter', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
-        }
+    .topbar { background: var(--blue-dark); padding: 0.5rem 1.5rem; }
+    .topbar a { color: rgba(255,255,255,0.7); text-decoration: none; font-size: 0.78rem; font-weight: 700; transition: color 0.2s; }
+    .topbar a:hover { color: #fff; }
 
-        body {
-            background-color: #000;
-            /* Foto do globo em alta qualidade ocupando 100% da tela */
-            background-image: linear-gradient(var(--dark-overlay), var(--dark-overlay)), 
-                              url('https://images.unsplash.com/photo-1451187580459-43490279c0fa?q=80&w=2072');
-            background-size: cover;
-            background-position: center;
-            background-attachment: fixed;
-            color: var(--pure-white);
-            height: 100vh;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            overflow: hidden;
-        }
+    header {
+      background: linear-gradient(135deg, #1240a8 0%, #1a56db 60%, #2563eb 100%);
+      color: #fff; padding: 2.5rem 2rem 2rem; text-align: center; position: relative; overflow: hidden;
+    }
+    header::before { content:''; position:absolute; top:-60px; right:-60px; width:220px; height:220px; border-radius:50%; background:rgba(255,255,255,0.07); }
+    header::after { content:''; position:absolute; bottom:-80px; left:-40px; width:260px; height:260px; border-radius:50%; background:rgba(22,163,74,0.18); }
+    .header-badge { display:inline-block; background:rgba(255,255,255,0.15); border:1px solid rgba(255,255,255,0.3); border-radius:999px; padding:4px 16px; font-size:0.72rem; font-weight:700; letter-spacing:0.12em; text-transform:uppercase; color:rgba(255,255,255,0.9); margin-bottom:1rem; }
+    .header-globe { font-size:2.5rem; margin-bottom:0.5rem; display:block; }
+    header h1 { font-size:clamp(2rem,5vw,3.2rem); font-weight:800; letter-spacing:-0.02em; color:#fff; position:relative; }
+    header p { margin-top:0.4rem; font-size:0.95rem; color:rgba(255,255,255,0.75); font-weight:400; position:relative; }
 
-        .container {
-            width: 90%;
-            max-width: 600px;
-            z-index: 10;
-            text-align: center;
-            animation: fadeIn 1s ease-out;
-        }
+    .controls { background:var(--surface); border-bottom:1px solid var(--border); padding:1rem 1.5rem; display:flex; flex-wrap:wrap; gap:0.75rem; align-items:center; justify-content:center; position:sticky; top:0; z-index:50; box-shadow:0 2px 8px rgba(26,86,219,0.08); }
+    .search-wrap { position:relative; flex:1 1 280px; max-width:380px; }
+    .search-wrap svg { position:absolute; left:0.8rem; top:50%; transform:translateY(-50%); color:var(--muted); pointer-events:none; }
+    .search-wrap input { width:100%; background:var(--bg); border:1.5px solid var(--border); border-radius:12px; color:var(--text); font-family:var(--sans); font-size:0.875rem; font-weight:500; padding:0.6rem 0.9rem 0.6rem 2.4rem; outline:none; transition:border-color 0.2s, box-shadow 0.2s; }
+    .search-wrap input:focus { border-color:var(--blue); box-shadow:0 0 0 3px rgba(26,86,219,0.12); }
+    .search-wrap input::placeholder { color:var(--muted); font-weight:400; }
+    select { background:var(--bg); border:1.5px solid var(--border); border-radius:12px; color:var(--text); font-family:var(--sans); font-size:0.8rem; font-weight:600; padding:0.6rem 1rem; outline:none; cursor:pointer; transition:border-color 0.2s; }
+    select:focus { border-color:var(--blue); }
+    .clear-btn { background:none; border:1.5px solid var(--border); border-radius:12px; color:var(--muted); font-family:var(--sans); font-size:0.78rem; font-weight:700; padding:0.6rem 1rem; cursor:pointer; transition:all 0.2s; }
+    .clear-btn:hover { border-color:var(--blue); color:var(--blue); }
 
-        /* Cabeçalho */
-        header h1 {
-            font-size: 3.5rem;
-            font-weight: 800;
-            letter-spacing: -2px;
-            margin-bottom: 5px;
-        }
+    .stats-bar { display:flex; flex-wrap:wrap; gap:0.75rem; justify-content:center; padding:1rem 1.5rem; }
+    .stat-pill { background:var(--surface); border:1px solid var(--border); border-radius:999px; padding:0.4rem 1rem; font-size:0.78rem; font-weight:600; color:var(--muted); display:flex; align-items:center; gap:6px; }
+    .stat-pill b { color:var(--blue); font-weight:800; }
+    .stat-pill.green b { color:var(--green); }
 
-        header h1 .blue-part {
-            color: var(--primary-blue);
-            text-shadow: 0 0 20px rgba(59, 130, 246, 0.4);
-        }
+    .grid-wrap { padding:0 1rem 2rem; }
+    .grid { display:grid; grid-template-columns:repeat(auto-fill, minmax(200px,1fr)); gap:0.875rem; max-width:1400px; margin:0 auto; }
 
-        header h1 .green-part {
-            color: var(--primary-green);
-            text-shadow: 0 0 20px rgba(34, 197, 94, 0.4);
-        }
+    .card { background:var(--surface); border:1.5px solid var(--border); border-radius:16px; padding:1.1rem 1rem; cursor:pointer; transition:transform 0.18s, box-shadow 0.18s, border-color 0.18s; position:relative; }
+    .card:hover { transform:translateY(-3px); box-shadow:0 8px 24px rgba(26,86,219,0.15); border-color:var(--blue); }
+    .card-flag { font-size:2.2rem; line-height:1; margin-bottom:0.6rem; display:block; }
+    .card-index { position:absolute; top:0.75rem; right:0.75rem; font-size:0.6rem; font-weight:700; color:var(--border); font-family:var(--mono); }
+    .card-name { font-size:0.82rem; font-weight:700; color:var(--text); margin-bottom:0.2rem; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
+    .card-capital { font-size:0.72rem; color:var(--muted); font-weight:500; margin-bottom:0.6rem; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
+    .card-tags { display:flex; flex-wrap:wrap; gap:4px; }
+    .tag { font-size:0.6rem; font-weight:700; padding:2px 8px; border-radius:999px; text-transform:uppercase; letter-spacing:0.04em; }
+    .tag.continent { background:var(--blue-light); color:var(--blue-dark); }
+    .tag.pop { background:var(--green-light); color:var(--green); }
 
-        header p {
-            color: var(--pure-white);
-            font-size: 1.2rem;
-            margin-bottom: 30px;
-            font-weight: 300;
-            opacity: 0.9;
-        }
+    .empty { display:none; text-align:center; padding:5rem 1rem; color:var(--muted); }
+    .empty span { font-size:3rem; display:block; margin-bottom:1rem; }
+    .empty p { font-size:0.9rem; font-weight:700; }
 
-        /* Painel Glassmorphism */
-        .search-card {
-            background: var(--glass-bg);
-            backdrop-filter: blur(15px);
-            -webkit-backdrop-filter: blur(15px);
-            border: 1px solid rgba(255, 255, 255, 0.1);
-            border-radius: 24px;
-            padding: 40px;
-            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5);
-        }
+    .overlay { display:none; position:fixed; inset:0; background:rgba(15,23,42,0.4); z-index:98; backdrop-filter:blur(2px); }
+    .overlay.open { display:block; }
 
-        .input-label {
-            display: block;
-            text-align: left;
-            margin-bottom: 10px;
-            color: var(--text-muted);
-            font-size: 0.9rem;
-        }
+    .panel { display:none; position:fixed; top:0; right:0; width:min(400px,100vw); height:100vh; background:var(--surface); border-left:1.5px solid var(--border); z-index:99; overflow-y:auto; animation:slideIn 0.22s ease; }
+    @keyframes slideIn { from{transform:translateX(30px);opacity:0} to{transform:translateX(0);opacity:1} }
+    .panel.open { display:block; }
+    .panel-header { background:linear-gradient(135deg,#1240a8,#1a56db); padding:1.5rem; color:#fff; }
+    .panel-close { display:flex; align-items:center; gap:6px; background:rgba(255,255,255,0.15); border:none; border-radius:8px; color:rgba(255,255,255,0.85); font-family:var(--sans); font-size:0.75rem; font-weight:700; padding:0.35rem 0.8rem; cursor:pointer; margin-bottom:1rem; transition:background 0.2s; }
+    .panel-close:hover { background:rgba(255,255,255,0.25); }
+    .panel-flag { font-size:3.5rem; line-height:1; margin-bottom:0.5rem; display:block; }
+    .panel-name { font-size:1.4rem; font-weight:800; color:#fff; margin-bottom:0.15rem; }
+    .panel-native { font-size:0.82rem; color:rgba(255,255,255,0.65); font-weight:400; }
+    .panel-body { padding:1.25rem 1.5rem; }
+    .panel-row { display:flex; justify-content:space-between; align-items:center; padding:0.7rem 0; border-bottom:1px solid var(--border); gap:1rem; }
+    .panel-row:last-child { border-bottom:none; }
+    .panel-label { font-size:0.7rem; font-weight:700; text-transform:uppercase; letter-spacing:0.08em; color:var(--muted); }
+    .panel-val { font-size:0.82rem; font-weight:700; color:var(--text); text-align:right; }
 
-        .input-group {
-            display: flex;
-            gap: 12px;
-            margin-bottom: 25px;
-        }
-
-        input {
-            flex: 1;
-            background: rgba(0, 0, 0, 0.3);
-            border: 2px solid rgba(255, 255, 255, 0.1);
-            border-radius: 12px;
-            padding: 15px;
-            color: var(--pure-white);
-            font-size: 1.1rem;
-            transition: 0.3s;
-        }
-
-        input:focus {
-            outline: none;
-            border-color: var(--primary-blue);
-            box-shadow: 0 0 0 4px rgba(59, 130, 246, 0.2);
-        }
-
-        button {
-            background: var(--primary-blue);
-            color: #fff;
-            border: none;
-            padding: 0 25px;
-            border-radius: 12px;
-            font-weight: 700;
-            cursor: pointer;
-            transition: 0.3s;
-        }
-
-        button:hover {
-            background: var(--primary-green);
-            transform: translateY(-2px);
-        }
-
-        /* Área de Resultados */
-        .result-area {
-            border-top: 1px solid rgba(255, 255, 255, 0.1);
-            padding-top: 25px;
-            min-height: 200px;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
-        }
-
-        .flag-container {
-            width: 220px;
-            height: 130px;
-            border-radius: 12px;
-            overflow: hidden;
-            border: 3px solid var(--pure-white);
-            box-shadow: 0 10px 20px rgba(0,0,0,0.4);
-            margin-bottom: 15px;
-            animation: scaleUp 0.5s ease-out;
-        }
-
-        .flag-container img {
-            width: 100%;
-            height: 100%;
-            object-fit: cover;
-        }
-
-        .country-info h2 {
-            font-size: 1.8rem;
-            color: var(--pure-white);
-        }
-
-        .country-info p {
-            color: var(--primary-green);
-            font-weight: 700;
-            font-size: 0.8rem;
-            text-transform: uppercase;
-            letter-spacing: 2px;
-            margin-top: 5px;
-        }
-
-        .status-msg {
-            color: var(--text-muted);
-            font-style: italic;
-        }
-
-        .hidden { display: none; }
-
-        /* Animações */
-        @keyframes fadeIn {
-            from { opacity: 0; transform: translateY(20px); }
-            to { opacity: 1; transform: translateY(0); }
-        }
-
-        @keyframes scaleUp {
-            from { opacity: 0; transform: scale(0.8); }
-            to { opacity: 1; transform: scale(1); }
-        }
-
-        /* Mobile */
-        @media (max-width: 480px) {
-            header h1 { font-size: 2.5rem; }
-            .input-group { flex-direction: column; }
-            button { padding: 15px; }
-            .search-card { padding: 20px; }
-        }
-    </style>
+    footer { text-align:center; padding:1.5rem; font-size:0.72rem; color:var(--muted); font-weight:600; border-top:1px solid var(--border); background:var(--surface); }
+  </style>
 </head>
 <body>
 
-    <div class="container">
-        <header>
-            <h1><span class="blue-part">Países</span><span class="green-part">Search</span></h1>
-            <p>Procure países em ordem alfabetica</p>
-        </header>
+<div class="topbar"><a href="index.html">← ARRAY / INDEX</a></div>
 
-        <section class="search-card">
-            <label class="input-label">Temos <span id="total-count" style="color: var(--primary-blue); font-weight: bold;">...</span> países carregados. Digite uma posição:</label>
-            <div class="input-group">
-                <input type="number" id="country-index" placeholder="Ex: 32" min="1">
-                <button id="search-btn">BUSCAR</button>
-            </div>
+<header>
+  <span class="header-globe">🌍</span>
+  <div class="header-badge">ARRAY — MÓDULO</div>
+  <h1>Países do Mundo</h1>
+  <p>195 países · clique para detalhes</p>
+</header>
 
-            <div class="result-area">
-                <div id="initial-msg" class="status-msg">
-                    Introduza um número para descobrir um país...
-                </div>
+<div class="controls">
+  <div class="search-wrap">
+    <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><circle cx="11" cy="11" r="8"/><path d="M21 21l-4.35-4.35"/></svg>
+    <input type="text" id="search" placeholder="Buscar país ou capital...">
+  </div>
+  <select id="continent-filter">
+    <option value="">Todos os continentes</option>
+    <option value="América do Norte">América do Norte</option>
+    <option value="América do Sul">América do Sul</option>
+    <option value="América Central">América Central</option>
+    <option value="Caribe">Caribe</option>
+    <option value="Europa">Europa</option>
+    <option value="Ásia">Ásia</option>
+    <option value="Oriente Médio">Oriente Médio</option>
+    <option value="África">África</option>
+    <option value="Oceania">Oceania</option>
+  </select>
+  <select id="sort-filter">
+    <option value="name">A → Z</option>
+    <option value="pop">Maior população</option>
+    <option value="area">Maior área</option>
+  </select>
+  <button class="clear-btn" id="clear-btn">Limpar</button>
+</div>
 
-                <div id="result-content" class="hidden">
-                    <div class="flag-container">
-                        <img id="flag-img" src="" alt="Bandeira">
-                    </div>
-                    <div class="country-info">
-                        <h2 id="country-name">Nome do País</h2>
-                        <p>Posição Alfabética #<span id="pos-number">0</span></p>
-                    </div>
-                </div>
-            </div>
-        </section>
-    </div>
+<div class="stats-bar">
+  <div class="stat-pill">Exibindo <b id="count">0</b> países</div>
+  <div class="stat-pill">10º: <b id="tenth">—</b></div>
+  <div class="stat-pill green">Encontrado: <b id="found">—</b></div>
+</div>
 
-    <script>
-        // Lógica da Aplicação
-        const API_URL = 'https://restcountries.com/v3.1/all?fields=name,flags';
-        let countriesList = [];
+<div class="grid-wrap">
+  <div class="grid" id="grid"></div>
+  <div class="empty" id="empty"><span>🔍</span><p>Nenhum país encontrado.</p></div>
+</div>
 
-        // Elementos DOM
-        const input = document.getElementById('country-index');
-        const btn = document.getElementById('search-btn');
-        const totalSpan = document.getElementById('total-count');
-        const initialMsg = document.getElementById('initial-msg');
-        const resultContent = document.getElementById('result-content');
-        const flagImg = document.getElementById('flag-img');
-        const nameText = document.getElementById('country-name');
-        const posText = document.getElementById('pos-number');
+<footer>ARRAY · Países do Mundo · <span id="yr"></span></footer>
 
-        // Função para carregar dados reais
-        async function fetchCountries() {
-            try {
-                const response = await fetch(API_URL);
-                const data = await response.json();
-                
-                // Ordenação Alfabética Inteligente
-                countriesList = data.map(c => ({
-                    name: c.name.common,
-                    flag: c.flags.svg
-                })).sort((a, b) => a.name.localeCompare(b.name));
+<div class="overlay" id="overlay"></div>
+<div class="panel" id="panel">
+  <div class="panel-header">
+    <button class="panel-close" id="close-btn">✕ Fechar</button>
+    <span class="panel-flag" id="d-flag"></span>
+    <div class="panel-name" id="d-name"></div>
+    <div class="panel-native" id="d-native"></div>
+  </div>
+  <div class="panel-body">
+    <div class="panel-row"><span class="panel-label">Capital</span><span class="panel-val" id="d-capital"></span></div>
+    <div class="panel-row"><span class="panel-label">Continente</span><span class="panel-val" id="d-continent"></span></div>
+    <div class="panel-row"><span class="panel-label">População</span><span class="panel-val" id="d-pop"></span></div>
+    <div class="panel-row"><span class="panel-label">Área</span><span class="panel-val" id="d-area"></span></div>
+    <div class="panel-row"><span class="panel-label">Idioma</span><span class="panel-val" id="d-lang"></span></div>
+    <div class="panel-row"><span class="panel-label">Moeda</span><span class="panel-val" id="d-currency"></span></div>
+    <div class="panel-row"><span class="panel-label">Índice no array</span><span class="panel-val" id="d-index"></span></div>
+  </div>
+</div>
 
-                totalSpan.textContent = countriesList.length;
-                input.max = countriesList.length;
-            } catch (error) {
-                totalSpan.textContent = "Erro";
-                initialMsg.textContent = "Falha ao carregar lista de países.";
-                initialMsg.style.color = "#f43f5e";
-            }
-        }
+<script>
+const countries=[
+  {name:"Afeganistão",native:"افغانستان",capital:"Cabul",continent:"Ásia",pop:41000000,area:652230,lang:"Dari / Pastó",currency:"Afgani (AFN)",flag:"🇦🇫"},
+  {name:"África do Sul",native:"South Africa",capital:"Pretória",continent:"África",pop:60000000,area:1219090,lang:"11 idiomas",currency:"Rand (ZAR)",flag:"🇿🇦"},
+  {name:"Albânia",native:"Shqipëria",capital:"Tirana",continent:"Europa",pop:2800000,area:28748,lang:"Albanês",currency:"Lek (ALL)",flag:"🇦🇱"},
+  {name:"Alemanha",native:"Deutschland",capital:"Berlim",continent:"Europa",pop:84000000,area:357114,lang:"Alemão",currency:"Euro (EUR)",flag:"🇩🇪"},
+  {name:"Andorra",native:"Andorra",capital:"Andorra la Vella",continent:"Europa",pop:77000,area:468,lang:"Catalão",currency:"Euro (EUR)",flag:"🇦🇩"},
+  {name:"Angola",native:"Angola",capital:"Luanda",continent:"África",pop:35000000,area:1246700,lang:"Português",currency:"Kwanza (AOA)",flag:"🇦🇴"},
+  {name:"Antígua e Barbuda",native:"Antigua and Barbuda",capital:"Saint John's",continent:"Caribe",pop:100000,area:442,lang:"Inglês",currency:"Dólar do Caribe (XCD)",flag:"🇦🇬"},
+  {name:"Arábia Saudita",native:"المملكة العربية السعودية",capital:"Riade",continent:"Oriente Médio",pop:36000000,area:2149690,lang:"Árabe",currency:"Riyal (SAR)",flag:"🇸🇦"},
+  {name:"Argélia",native:"الجزائر",capital:"Argel",continent:"África",pop:45000000,area:2381741,lang:"Árabe / Berbere",currency:"Dinar (DZD)",flag:"🇩🇿"},
+  {name:"Argentina",native:"Argentina",capital:"Buenos Aires",continent:"América do Sul",pop:46000000,area:2780400,lang:"Espanhol",currency:"Peso (ARS)",flag:"🇦🇷"},
+  {name:"Armênia",native:"Հայաստան",capital:"Yerevan",continent:"Ásia",pop:3000000,area:29743,lang:"Armênio",currency:"Dram (AMD)",flag:"🇦🇲"},
+  {name:"Austrália",native:"Australia",capital:"Camberra",continent:"Oceania",pop:26000000,area:7692024,lang:"Inglês",currency:"Dólar (AUD)",flag:"🇦🇺"},
+  {name:"Áustria",native:"Österreich",capital:"Viena",continent:"Europa",pop:9100000,area:83871,lang:"Alemão",currency:"Euro (EUR)",flag:"🇦🇹"},
+  {name:"Azerbaijão",native:"Azərbaycan",capital:"Baku",continent:"Ásia",pop:10000000,area:86600,lang:"Azerbaijanês",currency:"Manat (AZN)",flag:"🇦🇿"},
+  {name:"Bahamas",native:"Bahamas",capital:"Nassau",continent:"Caribe",pop:400000,area:13943,lang:"Inglês",currency:"Dólar (BSD)",flag:"🇧🇸"},
+  {name:"Bangladesh",native:"বাংলাদেশ",capital:"Dacca",continent:"Ásia",pop:170000000,area:147570,lang:"Bengali",currency:"Taka (BDT)",flag:"🇧🇩"},
+  {name:"Barbados",native:"Barbados",capital:"Bridgetown",continent:"Caribe",pop:290000,area:430,lang:"Inglês",currency:"Dólar (BBD)",flag:"🇧🇧"},
+  {name:"Barein",native:"البحرين",capital:"Manama",continent:"Oriente Médio",pop:1700000,area:765,lang:"Árabe",currency:"Dinar (BHD)",flag:"🇧🇭"},
+  {name:"Bélgica",native:"België",capital:"Bruxelas",continent:"Europa",pop:11600000,area:30528,lang:"Holandês / Francês / Alemão",currency:"Euro (EUR)",flag:"🇧🇪"},
+  {name:"Belize",native:"Belize",capital:"Belmopan",continent:"América Central",pop:410000,area:22966,lang:"Inglês",currency:"Dólar (BZD)",flag:"🇧🇿"},
+  {name:"Benin",native:"Bénin",capital:"Porto-Novo",continent:"África",pop:13000000,area:112622,lang:"Francês",currency:"Franco CFA (XOF)",flag:"🇧🇯"},
+  {name:"Bielorrússia",native:"Беларусь",capital:"Minsk",continent:"Europa",pop:9400000,area:207600,lang:"Bielorrusso / Russo",currency:"Rublo (BYN)",flag:"🇧🇾"},
+  {name:"Bolívia",native:"Bolivia",capital:"Sucre / La Paz",continent:"América do Sul",pop:12000000,area:1098581,lang:"Espanhol",currency:"Boliviano (BOB)",flag:"🇧🇴"},
+  {name:"Bósnia e Herzegovina",native:"Bosna i Hercegovina",capital:"Sarajevo",continent:"Europa",pop:3300000,area:51197,lang:"Bósnio / Croata / Sérvio",currency:"Marco (BAM)",flag:"🇧🇦"},
+  {name:"Botsuana",native:"Botswana",capital:"Gaborone",continent:"África",pop:2600000,area:581730,lang:"Inglês / Setswana",currency:"Pula (BWP)",flag:"🇧🇼"},
+  {name:"Brasil",native:"Brasil",capital:"Brasília",continent:"América do Sul",pop:215000000,area:8515767,lang:"Português",currency:"Real (BRL)",flag:"🇧🇷"},
+  {name:"Brunei",native:"Brunei",capital:"Bandar Seri Begawan",continent:"Ásia",pop:450000,area:5765,lang:"Malaio",currency:"Dólar (BND)",flag:"🇧🇳"},
+  {name:"Bulgária",native:"България",capital:"Sófia",continent:"Europa",pop:6500000,area:110879,lang:"Búlgaro",currency:"Lev (BGN)",flag:"🇧🇬"},
+  {name:"Burkina Faso",native:"Burkina Faso",capital:"Ouagadougou",continent:"África",pop:22000000,area:274200,lang:"Francês",currency:"Franco CFA (XOF)",flag:"🇧🇫"},
+  {name:"Burundi",native:"Burundi",capital:"Gitega",continent:"África",pop:13000000,area:27834,lang:"Kirundi / Francês",currency:"Franco (BIF)",flag:"🇧🇮"},
+  {name:"Butão",native:"འབྲུག",capital:"Timphu",continent:"Ásia",pop:800000,area:38394,lang:"Dzongkha",currency:"Ngultrum (BTN)",flag:"🇧🇹"},
+  {name:"Cabo Verde",native:"Cabo Verde",capital:"Praia",continent:"África",pop:600000,area:4033,lang:"Português",currency:"Escudo (CVE)",flag:"🇨🇻"},
+  {name:"Camarões",native:"Cameroun",capital:"Yaoundé",continent:"África",pop:28000000,area:475442,lang:"Francês / Inglês",currency:"Franco CFA (XAF)",flag:"🇨🇲"},
+  {name:"Camboja",native:"កម្ពុជា",capital:"Phnom Penh",continent:"Ásia",pop:17000000,area:181035,lang:"Khmer",currency:"Riel (KHR)",flag:"🇰🇭"},
+  {name:"Canadá",native:"Canada",capital:"Ottawa",continent:"América do Norte",pop:38000000,area:9984670,lang:"Inglês / Francês",currency:"Dólar (CAD)",flag:"🇨🇦"},
+  {name:"Catar",native:"قطر",capital:"Doha",continent:"Oriente Médio",pop:2800000,area:11586,lang:"Árabe",currency:"Riyal (QAR)",flag:"🇶🇦"},
+  {name:"Cazaquistão",native:"Қазақстан",capital:"Astana",continent:"Ásia",pop:19000000,area:2724900,lang:"Cazaque / Russo",currency:"Tenge (KZT)",flag:"🇰🇿"},
+  {name:"Chade",native:"تشاد",capital:"Jamena",continent:"África",pop:18000000,area:1284000,lang:"Árabe / Francês",currency:"Franco CFA (XAF)",flag:"🇹🇩"},
+  {name:"Chile",native:"Chile",capital:"Santiago",continent:"América do Sul",pop:19000000,area:756102,lang:"Espanhol",currency:"Peso (CLP)",flag:"🇨🇱"},
+  {name:"China",native:"中国",capital:"Pequim",continent:"Ásia",pop:1400000000,area:9596960,lang:"Mandarim",currency:"Yuan (CNY)",flag:"🇨🇳"},
+  {name:"Chipre",native:"Κύπρος",capital:"Nicósia",continent:"Europa",pop:1200000,area:9251,lang:"Grego / Turco",currency:"Euro (EUR)",flag:"🇨🇾"},
+  {name:"Colômbia",native:"Colombia",capital:"Bogotá",continent:"América do Sul",pop:52000000,area:1141748,lang:"Espanhol",currency:"Peso (COP)",flag:"🇨🇴"},
+  {name:"Comores",native:"Komori",capital:"Moroni",continent:"África",pop:900000,area:1862,lang:"Comoriano / Árabe / Francês",currency:"Franco (KMF)",flag:"🇰🇲"},
+  {name:"Congo",native:"Congo",capital:"Brazzaville",continent:"África",pop:6000000,area:342000,lang:"Francês",currency:"Franco CFA (XAF)",flag:"🇨🇬"},
+  {name:"Coreia do Norte",native:"조선민주주의인민공화국",capital:"Pyongyang",continent:"Ásia",pop:26000000,area:120538,lang:"Coreano",currency:"Won (KPW)",flag:"🇰🇵"},
+  {name:"Coreia do Sul",native:"대한민국",capital:"Seul",continent:"Ásia",pop:52000000,area:100210,lang:"Coreano",currency:"Won (KRW)",flag:"🇰🇷"},
+  {name:"Costa do Marfim",native:"Côte d'Ivoire",capital:"Yamoussoukro",continent:"África",pop:27000000,area:322463,lang:"Francês",currency:"Franco CFA (XOF)",flag:"🇨🇮"},
+  {name:"Costa Rica",native:"Costa Rica",capital:"San José",continent:"América Central",pop:5200000,area:51100,lang:"Espanhol",currency:"Colón (CRC)",flag:"🇨🇷"},
+  {name:"Croácia",native:"Hrvatska",capital:"Zagreb",continent:"Europa",pop:4000000,area:56594,lang:"Croata",currency:"Euro (EUR)",flag:"🇭🇷"},
+  {name:"Cuba",native:"Cuba",capital:"Havana",continent:"Caribe",pop:11000000,area:109884,lang:"Espanhol",currency:"Peso (CUP)",flag:"🇨🇺"},
+  {name:"Dinamarca",native:"Danmark",capital:"Copenhague",continent:"Europa",pop:5900000,area:42924,lang:"Dinamarquês",currency:"Coroa (DKK)",flag:"🇩🇰"},
+  {name:"Djibuti",native:"Djibouti",capital:"Djibuti",continent:"África",pop:1000000,area:23200,lang:"Francês / Árabe",currency:"Franco (DJF)",flag:"🇩🇯"},
+  {name:"Dominica",native:"Dominica",capital:"Roseau",continent:"Caribe",pop:73000,area:751,lang:"Inglês",currency:"Dólar do Caribe (XCD)",flag:"🇩🇲"},
+  {name:"Egito",native:"مصر",capital:"Cairo",continent:"África",pop:105000000,area:1002450,lang:"Árabe",currency:"Libra (EGP)",flag:"🇪🇬"},
+  {name:"El Salvador",native:"El Salvador",capital:"San Salvador",continent:"América Central",pop:6500000,area:21041,lang:"Espanhol",currency:"Dólar (USD)",flag:"🇸🇻"},
+  {name:"Emirados Árabes Unidos",native:"الإمارات",capital:"Abu Dhabi",continent:"Oriente Médio",pop:10000000,area:83600,lang:"Árabe",currency:"Dirham (AED)",flag:"🇦🇪"},
+  {name:"Equador",native:"Ecuador",capital:"Quito",continent:"América do Sul",pop:18000000,area:283561,lang:"Espanhol",currency:"Dólar (USD)",flag:"🇪🇨"},
+  {name:"Eritreia",native:"ኤርትራ",capital:"Asmara",continent:"África",pop:3600000,area:117600,lang:"Tigrínia / Árabe",currency:"Nakfa (ERN)",flag:"🇪🇷"},
+  {name:"Eslováquia",native:"Slovensko",capital:"Bratislava",continent:"Europa",pop:5500000,area:49035,lang:"Eslovaco",currency:"Euro (EUR)",flag:"🇸🇰"},
+  {name:"Eslovênia",native:"Slovenija",capital:"Liubliana",continent:"Europa",pop:2100000,area:20273,lang:"Esloveno",currency:"Euro (EUR)",flag:"🇸🇮"},
+  {name:"Espanha",native:"España",capital:"Madri",continent:"Europa",pop:47000000,area:505990,lang:"Espanhol",currency:"Euro (EUR)",flag:"🇪🇸"},
+  {name:"Estados Unidos",native:"United States",capital:"Washington D.C.",continent:"América do Norte",pop:335000000,area:9833517,lang:"Inglês",currency:"Dólar (USD)",flag:"🇺🇸"},
+  {name:"Estônia",native:"Eesti",capital:"Tallinn",continent:"Europa",pop:1300000,area:45228,lang:"Estoniano",currency:"Euro (EUR)",flag:"🇪🇪"},
+  {name:"Eswatini",native:"Eswatini",capital:"Mbabane",continent:"África",pop:1200000,area:17364,lang:"Suázi / Inglês",currency:"Lilangeni (SZL)",flag:"🇸🇿"},
+  {name:"Etiópia",native:"ኢትዮጵያ",capital:"Adis Abeba",continent:"África",pop:126000000,area:1104300,lang:"Amárico",currency:"Birr (ETB)",flag:"🇪🇹"},
+  {name:"Fiji",native:"Fiji",capital:"Suva",continent:"Oceania",pop:930000,area:18274,lang:"Inglês / Fijiano",currency:"Dólar (FJD)",flag:"🇫🇯"},
+  {name:"Filipinas",native:"Pilipinas",capital:"Manila",continent:"Ásia",pop:115000000,area:300000,lang:"Filipino / Inglês",currency:"Peso (PHP)",flag:"🇵🇭"},
+  {name:"Finlândia",native:"Suomi",capital:"Helsinque",continent:"Europa",pop:5500000,area:338145,lang:"Finlandês / Sueco",currency:"Euro (EUR)",flag:"🇫🇮"},
+  {name:"França",native:"France",capital:"Paris",continent:"Europa",pop:68000000,area:643801,lang:"Francês",currency:"Euro (EUR)",flag:"🇫🇷"},
+  {name:"Gabão",native:"Gabon",capital:"Libreville",continent:"África",pop:2300000,area:267668,lang:"Francês",currency:"Franco CFA (XAF)",flag:"🇬🇦"},
+  {name:"Gâmbia",native:"Gambia",capital:"Banjul",continent:"África",pop:2600000,area:11295,lang:"Inglês",currency:"Dalasi (GMD)",flag:"🇬🇲"},
+  {name:"Gana",native:"Ghana",capital:"Acra",continent:"África",pop:32000000,area:238533,lang:"Inglês",currency:"Cedi (GHS)",flag:"🇬🇭"},
+  {name:"Geórgia",native:"საქართველო",capital:"Tbilisi",continent:"Ásia",pop:3700000,area:69700,lang:"Georgiano",currency:"Lari (GEL)",flag:"🇬🇪"},
+  {name:"Granada",native:"Grenada",capital:"Saint George's",continent:"Caribe",pop:125000,area:344,lang:"Inglês",currency:"Dólar do Caribe (XCD)",flag:"🇬🇩"},
+  {name:"Grécia",native:"Ελλάδα",capital:"Atenas",continent:"Europa",pop:10700000,area:131957,lang:"Grego",currency:"Euro (EUR)",flag:"🇬🇷"},
+  {name:"Guatemala",native:"Guatemala",capital:"Cidade da Guatemala",continent:"América Central",pop:17000000,area:108889,lang:"Espanhol",currency:"Quetzal (GTQ)",flag:"🇬🇹"},
+  {name:"Guiana",native:"Guyana",capital:"Georgetown",continent:"América do Sul",pop:800000,area:214969,lang:"Inglês",currency:"Dólar (GYD)",flag:"🇬🇾"},
+  {name:"Guiné",native:"Guinée",capital:"Conacri",continent:"África",pop:13000000,area:245857,lang:"Francês",currency:"Franco (GNF)",flag:"🇬🇳"},
+  {name:"Guiné-Bissau",native:"Guiné-Bissau",capital:"Bissau",continent:"África",pop:2100000,area:36125,lang:"Português",currency:"Franco CFA (XOF)",flag:"🇬🇼"},
+  {name:"Guiné Equatorial",native:"Guinea Ecuatorial",capital:"Malabo",continent:"África",pop:1500000,area:28051,lang:"Espanhol / Francês / Português",currency:"Franco CFA (XAF)",flag:"🇬🇶"},
+  {name:"Haiti",native:"Haïti",capital:"Porto Príncipe",continent:"Caribe",pop:11400000,area:27750,lang:"Haitiano / Francês",currency:"Gourde (HTG)",flag:"🇭🇹"},
+  {name:"Honduras",native:"Honduras",capital:"Tegucigalpa",continent:"América Central",pop:10000000,area:112492,lang:"Espanhol",currency:"Lempira (HNL)",flag:"🇭🇳"},
+  {name:"Hungria",native:"Magyarország",capital:"Budapeste",continent:"Europa",pop:9700000,area:93028,lang:"Húngaro",currency:"Forint (HUF)",flag:"🇭🇺"},
+  {name:"Iêmen",native:"اليمن",capital:"Sanaa",continent:"Oriente Médio",pop:33000000,area:527968,lang:"Árabe",currency:"Rial (YER)",flag:"🇾🇪"},
+  {name:"Índia",native:"भारत",capital:"Nova Délhi",continent:"Ásia",pop:1420000000,area:3287263,lang:"Hindi / Inglês",currency:"Rúpia (INR)",flag:"🇮🇳"},
+  {name:"Indonésia",native:"Indonesia",capital:"Jacarta",continent:"Ásia",pop:277000000,area:1904569,lang:"Indonésio",currency:"Rúpia (IDR)",flag:"🇮🇩"},
+  {name:"Irã",native:"ایران",capital:"Teerã",continent:"Oriente Médio",pop:87000000,area:1648195,lang:"Persa",currency:"Rial (IRR)",flag:"🇮🇷"},
+  {name:"Iraque",native:"العراق",capital:"Bagdá",continent:"Oriente Médio",pop:42000000,area:438317,lang:"Árabe / Curdo",currency:"Dinar (IQD)",flag:"🇮🇶"},
+  {name:"Irlanda",native:"Ireland",capital:"Dublin",continent:"Europa",pop:5100000,area:70273,lang:"Irlandês / Inglês",currency:"Euro (EUR)",flag:"🇮🇪"},
+  {name:"Islândia",native:"Ísland",capital:"Reykjavík",continent:"Europa",pop:370000,area:103000,lang:"Islandês",currency:"Coroa (ISK)",flag:"🇮🇸"},
+  {name:"Israel",native:"ישראל",capital:"Jerusalém",continent:"Oriente Médio",pop:9700000,area:20770,lang:"Hebraico / Árabe",currency:"Shekel (ILS)",flag:"🇮🇱"},
+  {name:"Itália",native:"Italia",capital:"Roma",continent:"Europa",pop:60000000,area:301336,lang:"Italiano",currency:"Euro (EUR)",flag:"🇮🇹"},
+  {name:"Jamaica",native:"Jamaica",capital:"Kingston",continent:"Caribe",pop:3000000,area:10991,lang:"Inglês",currency:"Dólar (JMD)",flag:"🇯🇲"},
+  {name:"Japão",native:"日本",capital:"Tóquio",continent:"Ásia",pop:125000000,area:377975,lang:"Japonês",currency:"Iene (JPY)",flag:"🇯🇵"},
+  {name:"Jordânia",native:"الأردن",capital:"Amã",continent:"Oriente Médio",pop:10000000,area:89342,lang:"Árabe",currency:"Dinar (JOD)",flag:"🇯🇴"},
+  {name:"Kuweit",native:"الكويت",capital:"Cidade do Kuweit",continent:"Oriente Médio",pop:4300000,area:17818,lang:"Árabe",currency:"Dinar (KWD)",flag:"🇰🇼"},
+  {name:"Laos",native:"ລາວ",capital:"Vientiane",continent:"Ásia",pop:7400000,area:236800,lang:"Laociano",currency:"Kip (LAK)",flag:"🇱🇦"},
+  {name:"Lesoto",native:"Lesotho",capital:"Maseru",continent:"África",pop:2200000,area:30355,lang:"Sesoto / Inglês",currency:"Loti (LSL)",flag:"🇱🇸"},
+  {name:"Letônia",native:"Latvija",capital:"Riga",continent:"Europa",pop:1800000,area:64589,lang:"Letão",currency:"Euro (EUR)",flag:"🇱🇻"},
+  {name:"Líbano",native:"لبنان",capital:"Beirute",continent:"Oriente Médio",pop:5500000,area:10452,lang:"Árabe",currency:"Libra (LBP)",flag:"🇱🇧"},
+  {name:"Libéria",native:"Liberia",capital:"Monróvia",continent:"África",pop:5300000,area:111369,lang:"Inglês",currency:"Dólar (LRD)",flag:"🇱🇷"},
+  {name:"Líbia",native:"ليبيا",capital:"Trípoli",continent:"África",pop:7200000,area:1759540,lang:"Árabe",currency:"Dinar (LYD)",flag:"🇱🇾"},
+  {name:"Liechtenstein",native:"Liechtenstein",capital:"Vaduz",continent:"Europa",pop:39000,area:160,lang:"Alemão",currency:"Franco Suíço (CHF)",flag:"🇱🇮"},
+  {name:"Lituânia",native:"Lietuva",capital:"Vilnius",continent:"Europa",pop:2800000,area:65300,lang:"Lituano",currency:"Euro (EUR)",flag:"🇱🇹"},
+  {name:"Luxemburgo",native:"Luxembourg",capital:"Luxemburgo",continent:"Europa",pop:660000,area:2586,lang:"Luxemburguês / Francês / Alemão",currency:"Euro (EUR)",flag:"🇱🇺"},
+  {name:"Madagascar",native:"Madagasikara",capital:"Antananarivo",continent:"África",pop:28000000,area:587041,lang:"Malgaxe / Francês",currency:"Ariary (MGA)",flag:"🇲🇬"},
+  {name:"Malásia",native:"Malaysia",capital:"Kuala Lumpur",continent:"Ásia",pop:33000000,area:329847,lang:"Malaio",currency:"Ringgit (MYR)",flag:"🇲🇾"},
+  {name:"Malaui",native:"Malawi",capital:"Lilongwe",continent:"África",pop:20000000,area:118484,lang:"Chichewa / Inglês",currency:"Kwacha (MWK)",flag:"🇲🇼"},
+  {name:"Maldivas",native:"ދިވެހިރާއްޖެ",capital:"Malé",continent:"Ásia",pop:540000,area:298,lang:"Divehi",currency:"Rufiyaa (MVR)",flag:"🇲🇻"},
+  {name:"Mali",native:"Mali",capital:"Bamako",continent:"África",pop:22000000,area:1240192,lang:"Francês",currency:"Franco CFA (XOF)",flag:"🇲🇱"},
+  {name:"Malta",native:"Malta",capital:"Valletta",continent:"Europa",pop:520000,area:316,lang:"Maltês / Inglês",currency:"Euro (EUR)",flag:"🇲🇹"},
+  {name:"Marrocos",native:"المغرب",capital:"Rabat",continent:"África",pop:37000000,area:446550,lang:"Árabe / Berbere",currency:"Dirham (MAD)",flag:"🇲🇦"},
+  {name:"Maurício",native:"Mauritius",capital:"Port Louis",continent:"África",pop:1300000,area:2040,lang:"Inglês / Francês",currency:"Rúpia (MUR)",flag:"🇲🇺"},
+  {name:"Mauritânia",native:"موريتانيا",capital:"Nuakchott",continent:"África",pop:4700000,area:1030700,lang:"Árabe",currency:"Ouguiya (MRU)",flag:"🇲🇷"},
+  {name:"México",native:"México",capital:"Cidade do México",continent:"América do Norte",pop:130000000,area:1964375,lang:"Espanhol",currency:"Peso (MXN)",flag:"🇲🇽"},
+  {name:"Mianmar",native:"မြန်မာ",capital:"Naypyidaw",continent:"Ásia",pop:55000000,area:676578,lang:"Birmanês",currency:"Kyat (MMK)",flag:"🇲🇲"},
+  {name:"Micronésia",native:"Micronesia",capital:"Palikir",continent:"Oceania",pop:115000,area:702,lang:"Inglês",currency:"Dólar (USD)",flag:"🇫🇲"},
+  {name:"Moldávia",native:"Moldova",capital:"Chisinau",continent:"Europa",pop:2600000,area:33846,lang:"Romeno",currency:"Leu (MDL)",flag:"🇲🇩"},
+  {name:"Mônaco",native:"Monaco",capital:"Monte Carlo",continent:"Europa",pop:36000,area:2,lang:"Francês",currency:"Euro (EUR)",flag:"🇲🇨"},
+  {name:"Mongólia",native:"Монгол улс",capital:"Ulã Bator",continent:"Ásia",pop:3400000,area:1564116,lang:"Mongol",currency:"Tugrik (MNT)",flag:"🇲🇳"},
+  {name:"Montenegro",native:"Crna Gora",capital:"Podgorica",continent:"Europa",pop:620000,area:13812,lang:"Montenegrino",currency:"Euro (EUR)",flag:"🇲🇪"},
+  {name:"Moçambique",native:"Moçambique",capital:"Maputo",continent:"África",pop:32000000,area:801590,lang:"Português",currency:"Metical (MZN)",flag:"🇲🇿"},
+  {name:"Namíbia",native:"Namibia",capital:"Windhoek",continent:"África",pop:2600000,area:824292,lang:"Inglês",currency:"Dólar (NAD)",flag:"🇳🇦"},
+  {name:"Nauru",native:"Nauru",capital:"Yaren",continent:"Oceania",pop:11000,area:21,lang:"Nauruana / Inglês",currency:"Dólar (AUD)",flag:"🇳🇷"},
+  {name:"Nepal",native:"नेपाल",capital:"Katmandu",continent:"Ásia",pop:30000000,area:147181,lang:"Nepalês",currency:"Rúpia (NPR)",flag:"🇳🇵"},
+  {name:"Nicarágua",native:"Nicaragua",capital:"Manágua",continent:"América Central",pop:6800000,area:130373,lang:"Espanhol",currency:"Córdoba (NIO)",flag:"🇳🇮"},
+  {name:"Níger",native:"Niger",capital:"Niamey",continent:"África",pop:25000000,area:1267000,lang:"Francês",currency:"Franco CFA (XOF)",flag:"🇳🇪"},
+  {name:"Nigéria",native:"Nigeria",capital:"Abuja",continent:"África",pop:218000000,area:923768,lang:"Inglês",currency:"Naira (NGN)",flag:"🇳🇬"},
+  {name:"Noruega",native:"Norge",capital:"Oslo",continent:"Europa",pop:5400000,area:385207,lang:"Norueguês",currency:"Coroa (NOK)",flag:"🇳🇴"},
+  {name:"Nova Zelândia",native:"New Zealand",capital:"Wellington",continent:"Oceania",pop:5000000,area:268021,lang:"Inglês / Maori",currency:"Dólar (NZD)",flag:"🇳🇿"},
+  {name:"Omã",native:"عُمان",capital:"Mascate",continent:"Oriente Médio",pop:4700000,area:309500,lang:"Árabe",currency:"Rial (OMR)",flag:"🇴🇲"},
+  {name:"Países Baixos",native:"Nederland",capital:"Amsterdã",continent:"Europa",pop:17900000,area:41543,lang:"Holandês",currency:"Euro (EUR)",flag:"🇳🇱"},
+  {name:"Palau",native:"Palau",capital:"Ngerulmud",continent:"Oceania",pop:18000,area:459,lang:"Palauano / Inglês",currency:"Dólar (USD)",flag:"🇵🇼"},
+  {name:"Palestina",native:"فلسطين",capital:"Ramallah",continent:"Oriente Médio",pop:5300000,area:6020,lang:"Árabe",currency:"Shekel / Dinar",flag:"🇵🇸"},
+  {name:"Panamá",native:"Panamá",capital:"Cidade do Panamá",continent:"América Central",pop:4400000,area:75417,lang:"Espanhol",currency:"Balboa / Dólar",flag:"🇵🇦"},
+  {name:"Papua Nova Guiné",native:"Papua New Guinea",capital:"Port Moresby",continent:"Oceania",pop:10000000,area:462840,lang:"Inglês / Tok Pisin",currency:"Kina (PGK)",flag:"🇵🇬"},
+  {name:"Paquistão",native:"پاکستان",capital:"Islamabad",continent:"Ásia",pop:231000000,area:881913,lang:"Urdu / Inglês",currency:"Rúpia (PKR)",flag:"🇵🇰"},
+  {name:"Paraguai",native:"Paraguay",capital:"Assunção",continent:"América do Sul",pop:7400000,area:406752,lang:"Espanhol / Guarani",currency:"Guarani (PYG)",flag:"🇵🇾"},
+  {name:"Peru",native:"Perú",capital:"Lima",continent:"América do Sul",pop:33000000,area:1285216,lang:"Espanhol",currency:"Sol (PEN)",flag:"🇵🇪"},
+  {name:"Polônia",native:"Polska",capital:"Varsóvia",continent:"Europa",pop:38000000,area:312696,lang:"Polonês",currency:"Zloty (PLN)",flag:"🇵🇱"},
+  {name:"Portugal",native:"Portugal",capital:"Lisboa",continent:"Europa",pop:10000000,area:92212,lang:"Português",currency:"Euro (EUR)",flag:"🇵🇹"},
+  {name:"Quênia",native:"Kenya",capital:"Nairóbi",continent:"África",pop:55000000,area:580367,lang:"Suaíli / Inglês",currency:"Xelim (KES)",flag:"🇰🇪"},
+  {name:"Quirguistão",native:"Кыргызстан",capital:"Bisqueque",continent:"Ásia",pop:6700000,area:199951,lang:"Quirguiz / Russo",currency:"Som (KGS)",flag:"🇰🇬"},
+  {name:"Reino Unido",native:"United Kingdom",capital:"Londres",continent:"Europa",pop:68000000,area:242495,lang:"Inglês",currency:"Libra (GBP)",flag:"🇬🇧"},
+  {name:"República Centro-Africana",native:"Centrafrique",capital:"Bangui",continent:"África",pop:5500000,area:622984,lang:"Sango / Francês",currency:"Franco CFA (XAF)",flag:"🇨🇫"},
+  {name:"República Democrática do Congo",native:"Congo",capital:"Kinshasa",continent:"África",pop:100000000,area:2344858,lang:"Francês",currency:"Franco (CDF)",flag:"🇨🇩"},
+  {name:"República Dominicana",native:"República Dominicana",capital:"Santo Domingo",continent:"Caribe",pop:11000000,area:48671,lang:"Espanhol",currency:"Peso (DOP)",flag:"🇩🇴"},
+  {name:"Romênia",native:"România",capital:"Bucareste",continent:"Europa",pop:19000000,area:238397,lang:"Romeno",currency:"Leu (RON)",flag:"🇷🇴"},
+  {name:"Ruanda",native:"Rwanda",capital:"Kigali",continent:"África",pop:14000000,area:26338,lang:"Kinyarwanda / Inglês / Francês",currency:"Franco (RWF)",flag:"🇷🇼"},
+  {name:"Rússia",native:"Россия",capital:"Moscou",continent:"Europa",pop:144000000,area:17098242,lang:"Russo",currency:"Rublo (RUB)",flag:"🇷🇺"},
+  {name:"Ilhas Salomão",native:"Solomon Islands",capital:"Honiara",continent:"Oceania",pop:720000,area:28896,lang:"Inglês",currency:"Dólar (SBD)",flag:"🇸🇧"},
+  {name:"Samoa",native:"Samoa",capital:"Apia",continent:"Oceania",pop:220000,area:2842,lang:"Samoano / Inglês",currency:"Tālā (WST)",flag:"🇼🇸"},
+  {name:"São Cristóvão e Nevis",native:"Saint Kitts and Nevis",capital:"Basseterre",continent:"Caribe",pop:55000,area:261,lang:"Inglês",currency:"Dólar do Caribe (XCD)",flag:"🇰🇳"},
+  {name:"São Marino",native:"San Marino",capital:"Cidade de São Marino",continent:"Europa",pop:34000,area:61,lang:"Italiano",currency:"Euro (EUR)",flag:"🇸🇲"},
+  {name:"São Tomé e Príncipe",native:"São Tomé e Príncipe",capital:"São Tomé",continent:"África",pop:230000,area:964,lang:"Português",currency:"Dobra (STN)",flag:"🇸🇹"},
+  {name:"São Vicente e Granadinas",native:"Saint Vincent and the Grenadines",capital:"Kingstown",continent:"Caribe",pop:110000,area:389,lang:"Inglês",currency:"Dólar do Caribe (XCD)",flag:"🇻🇨"},
+  {name:"Santa Lúcia",native:"Saint Lucia",capital:"Castries",continent:"Caribe",pop:185000,area:616,lang:"Inglês",currency:"Dólar do Caribe (XCD)",flag:"🇱🇨"},
+  {name:"Senegal",native:"Sénégal",capital:"Dacar",continent:"África",pop:17000000,area:196722,lang:"Francês",currency:"Franco CFA (XOF)",flag:"🇸🇳"},
+  {name:"Serra Leoa",native:"Sierra Leone",capital:"Freetown",continent:"África",pop:8200000,area:71740,lang:"Inglês",currency:"Leone (SLL)",flag:"🇸🇱"},
+  {name:"Sérvia",native:"Srbija",capital:"Belgrado",continent:"Europa",pop:6800000,area:77474,lang:"Sérvio",currency:"Dinar (RSD)",flag:"🇷🇸"},
+  {name:"Singapura",native:"Singapore",capital:"Singapura",continent:"Ásia",pop:5800000,area:728,lang:"Inglês / Malaio / Mandarim / Tâmil",currency:"Dólar (SGD)",flag:"🇸🇬"},
+  {name:"Síria",native:"سوريا",capital:"Damasco",continent:"Oriente Médio",pop:22000000,area:185180,lang:"Árabe",currency:"Libra (SYP)",flag:"🇸🇾"},
+  {name:"Somália",native:"Soomaaliya",capital:"Mogadíscio",continent:"África",pop:17000000,area:637657,lang:"Somali / Árabe",currency:"Xelim (SOS)",flag:"🇸🇴"},
+  {name:"Sri Lanka",native:"ශ්‍රී ලංකාව",capital:"Sri Jayawardenepura Kotte",continent:"Ásia",pop:22000000,area:65610,lang:"Cingalês / Tâmil",currency:"Rúpia (LKR)",flag:"🇱🇰"},
+  {name:"Sudão",native:"السودان",capital:"Cartum",continent:"África",pop:46000000,area:1861484,lang:"Árabe / Inglês",currency:"Libra (SDG)",flag:"🇸🇩"},
+  {name:"Sudão do Sul",native:"South Sudan",capital:"Juba",continent:"África",pop:11000000,area:619745,lang:"Inglês",currency:"Libra (SSP)",flag:"🇸🇸"},
+  {name:"Suécia",native:"Sverige",capital:"Estocolmo",continent:"Europa",pop:10500000,area:450295,lang:"Sueco",currency:"Coroa (SEK)",flag:"🇸🇪"},
+  {name:"Suíça",native:"Schweiz",capital:"Berna",continent:"Europa",pop:8700000,area:41285,lang:"Alemão / Francês / Italiano / Romanche",currency:"Franco (CHF)",flag:"🇨🇭"},
+  {name:"Suriname",native:"Suriname",capital:"Paramaribo",continent:"América do Sul",pop:620000,area:163820,lang:"Holandês",currency:"Dólar (SRD)",flag:"🇸🇷"},
+  {name:"Tailândia",native:"ประเทศไทย",capital:"Bangcoc",continent:"Ásia",pop:70000000,area:513120,lang:"Tailandês",currency:"Baht (THB)",flag:"🇹🇭"},
+  {name:"Taiwan",native:"台灣",capital:"Taipé",continent:"Ásia",pop:23500000,area:36193,lang:"Mandarim",currency:"Dólar (TWD)",flag:"🇹🇼"},
+  {name:"Tajiquistão",native:"Тоҷикистон",capital:"Duchambê",continent:"Ásia",pop:10000000,area:143100,lang:"Tajique / Russo",currency:"Somoni (TJS)",flag:"🇹🇯"},
+  {name:"Tanzânia",native:"Tanzania",capital:"Dodoma",continent:"África",pop:63000000,area:945087,lang:"Suaíli / Inglês",currency:"Xelim (TZS)",flag:"🇹🇿"},
+  {name:"Timor-Leste",native:"Timor-Leste",capital:"Díli",continent:"Ásia",pop:1400000,area:14874,lang:"Tétum / Português",currency:"Dólar (USD)",flag:"🇹🇱"},
+  {name:"Togo",native:"Togo",capital:"Lomé",continent:"África",pop:8700000,area:56785,lang:"Francês",currency:"Franco CFA (XOF)",flag:"🇹🇬"},
+  {name:"Tonga",native:"Tonga",capital:"Nukualofa",continent:"Oceania",pop:100000,area:748,lang:"Tonganês / Inglês",currency:"Paʻanga (TOP)",flag:"🇹🇴"},
+  {name:"Trinidad e Tobago",native:"Trinidad and Tobago",capital:"Porto de Espanha",continent:"Caribe",pop:1400000,area:5130,lang:"Inglês",currency:"Dólar (TTD)",flag:"🇹🇹"},
+  {name:"Tunísia",native:"تونس",capital:"Túnis",continent:"África",pop:12000000,area:163610,lang:"Árabe",currency:"Dinar (TND)",flag:"🇹🇳"},
+  {name:"Turcomenistão",native:"Türkmenistan",capital:"Asgabate",continent:"Ásia",pop:6100000,area:488100,lang:"Turcomano",currency:"Manat (TMT)",flag:"🇹🇲"},
+  {name:"Turquia",native:"Türkiye",capital:"Ancara",continent:"Ásia",pop:85000000,area:783562,lang:"Turco",currency:"Lira (TRY)",flag:"🇹🇷"},
+  {name:"Tuvalu",native:"Tuvalu",capital:"Funafuti",continent:"Oceania",pop:11000,area:26,lang:"Tuvaluano / Inglês",currency:"Dólar (AUD)",flag:"🇹🇻"},
+  {name:"Ucrânia",native:"Україна",capital:"Kiev",continent:"Europa",pop:44000000,area:603550,lang:"Ucraniano",currency:"Hryvnia (UAH)",flag:"🇺🇦"},
+  {name:"Uganda",native:"Uganda",capital:"Kampala",continent:"África",pop:47000000,area:241038,lang:"Inglês / Suaíli",currency:"Xelim (UGX)",flag:"🇺🇬"},
+  {name:"Uruguai",native:"Uruguay",capital:"Montevidéu",continent:"América do Sul",pop:3600000,area:176215,lang:"Espanhol",currency:"Peso (UYU)",flag:"🇺🇾"},
+  {name:"Uzbequistão",native:"O'zbekiston",capital:"Tasquente",continent:"Ásia",pop:35000000,area:448978,lang:"Usbeque",currency:"Som (UZS)",flag:"🇺🇿"},
+  {name:"Vanuatu",native:"Vanuatu",capital:"Port Vila",continent:"Oceania",pop:320000,area:12189,lang:"Bislama / Inglês / Francês",currency:"Vatu (VUV)",flag:"🇻🇺"},
+  {name:"Vaticano",native:"Vaticano",capital:"Cidade do Vaticano",continent:"Europa",pop:800,area:0.44,lang:"Latim / Italiano",currency:"Euro (EUR)",flag:"🇻🇦"},
+  {name:"Venezuela",native:"Venezuela",capital:"Caracas",continent:"América do Sul",pop:28000000,area:912050,lang:"Espanhol",currency:"Bolívar (VEF)",flag:"🇻🇪"},
+  {name:"Vietnã",native:"Việt Nam",capital:"Hanói",continent:"Ásia",pop:97000000,area:331212,lang:"Vietnamita",currency:"Dong (VND)",flag:"🇻🇳"},
+  {name:"Zâmbia",native:"Zambia",capital:"Lusaka",continent:"África",pop:19000000,area:752612,lang:"Inglês",currency:"Kwacha (ZMW)",flag:"🇿🇲"},
+  {name:"Zimbábue",native:"Zimbabwe",capital:"Harare",continent:"África",pop:15000000,area:390757,lang:"Shona / Ndebele / Inglês",currency:"Dólar (ZWL)",flag:"🇿🇼"},
+];
 
-        // Função para mostrar o país selecionado
-        function searchCountry() {
-            const index = parseInt(input.value);
+let filtered=[...countries];
+const grid=document.getElementById('grid');
+const emptyEl=document.getElementById('empty');
+const countEl=document.getElementById('count');
+const tenthEl=document.getElementById('tenth');
+const foundEl=document.getElementById('found');
+const panel=document.getElementById('panel');
+const overlay=document.getElementById('overlay');
+document.getElementById('yr').textContent=new Date().getFullYear();
 
-            if (!index || index < 1 || index > countriesList.length) {
-                initialMsg.classList.remove('hidden');
-                resultContent.classList.add('hidden');
-                initialMsg.textContent = `Por favor, indique um número entre 1 e ${countriesList.length}.`;
-                initialMsg.style.color = "#f43f5e";
-                return;
-            }
+function fmt(n){return n>=1000000?(n/1000000).toFixed(1)+'M':n.toLocaleString('pt-BR');}
+function fmtArea(n){return n<1?'<1 km²':n.toLocaleString('pt-BR')+' km²';}
 
-            const country = countriesList[index - 1];
+function applyFilters(){
+  const q=document.getElementById('search').value.toLowerCase().trim();
+  const cont=document.getElementById('continent-filter').value;
+  const sort=document.getElementById('sort-filter').value;
+  filtered=countries.filter(c=>{
+    const mq=!q||c.name.toLowerCase().includes(q)||c.capital.toLowerCase().includes(q)||c.native.toLowerCase().includes(q);
+    const mc=!cont||c.continent===cont;
+    return mq&&mc;
+  });
+  if(sort==='pop') filtered.sort((a,b)=>b.pop-a.pop);
+  else if(sort==='area') filtered.sort((a,b)=>b.area-a.area);
+  else filtered.sort((a,b)=>a.name.localeCompare(b.name,'pt'));
+  countEl.textContent=filtered.length;
+  tenthEl.textContent=filtered[9]?filtered[9].name:'—';
+  foundEl.textContent=filtered.length===1?filtered[0].name:(filtered.length===0?'Nenhum':'—');
+  grid.innerHTML='';
+  if(!filtered.length){emptyEl.style.display='block';return;}
+  emptyEl.style.display='none';
+  filtered.forEach((c,i)=>{
+    const card=document.createElement('div');
+    card.className='card';
+    card.innerHTML=`<span class="card-index">[${String(i).padStart(3,'0')}]</span><span class="card-flag">${c.flag}</span><div class="card-name">${c.name}</div><div class="card-capital">${c.capital}</div><div class="card-tags"><span class="tag continent">${c.continent}</span><span class="tag pop">${fmt(c.pop)} hab.</span></div>`;
+    card.addEventListener('click',()=>openPanel(c,i));
+    grid.appendChild(card);
+  });
+}
 
-            // Atualiza Interface
-            flagImg.src = country.flag;
-            nameText.textContent = country.name;
-            posText.textContent = index;
+function openPanel(c,i){
+  document.getElementById('d-flag').textContent=c.flag;
+  document.getElementById('d-name').textContent=c.name;
+  document.getElementById('d-native').textContent=c.native!==c.name?`"${c.native}"`:' ';
+  document.getElementById('d-capital').textContent=c.capital;
+  document.getElementById('d-continent').textContent=c.continent;
+  document.getElementById('d-pop').textContent=c.pop.toLocaleString('pt-BR')+' hab.';
+  document.getElementById('d-area').textContent=fmtArea(c.area);
+  document.getElementById('d-lang').textContent=c.lang;
+  document.getElementById('d-currency').textContent=c.currency;
+  document.getElementById('d-index').textContent=`[${i}]`;
+  panel.classList.add('open');
+  overlay.classList.add('open');
+}
 
-            initialMsg.classList.add('hidden');
-            resultContent.classList.remove('hidden');
+function closePanel(){panel.classList.remove('open');overlay.classList.remove('open');}
 
-            // Reinicia animação para efeito visual
-            resultContent.style.animation = 'none';
-            resultContent.offsetHeight; 
-            resultContent.style.animation = null;
-        }
-
-        // Eventos
-        btn.addEventListener('click', searchCountry);
-        input.addEventListener('keypress', (e) => {
-            if (e.key === 'Enter') searchCountry();
-        });
-
-        // Início
-        fetchCountries();
-    </script>
+document.getElementById('close-btn').addEventListener('click',closePanel);
+overlay.addEventListener('click',closePanel);
+document.getElementById('search').addEventListener('input',applyFilters);
+document.getElementById('continent-filter').addEventListener('change',applyFilters);
+document.getElementById('sort-filter').addEventListener('change',applyFilters);
+document.getElementById('clear-btn').addEventListener('click',()=>{
+  document.getElementById('search').value='';
+  document.getElementById('continent-filter').value='';
+  document.getElementById('sort-filter').value='name';
+  applyFilters();
+});
+applyFilters();
+</script>
 </body>
 </html>
