@@ -1,51 +1,203 @@
-<!DOCTYPE html>
-<html lang="pt-br">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>GlobalArray Explorer | Lista de Países</title>
-    <link rel="stylesheet" href="style.css">
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&display=swap" rel="stylesheet">
-</head>
-<body>
+/* Variáveis de cores e definições globais */
+:root {
+    --blue: #38bdf8;       
+    --green: #4ade80;      
+    --white: #ffffff;      
+    --bg-dark: #020617;    
+    --card-bg: rgba(15, 23, 42, 0.85); 
+    --text-muted: #94a3b8; 
+    --error: #f43f5e;      
+}
 
-    <div class="planet-bg">
-        <div class="stars"></div>
-        <div class="glow"></div>
-        <div class="earth"></div>
-    </div>
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
 
-    <main class="container">
-        <header>
-            <h1>Global<span>Array</span></h1>
-            <p>Descubra países por posição. A lista contém <strong id="total-countries">...</strong> países em <strong>ordem alfabética</strong>.</p>
-        </header>
+body {
+    font-family: 'Inter', 'Segoe UI', system-ui, sans-serif;
+    background-color: var(--bg-dark);
+    /* Imagem de fundo imersiva ocupando 100% da viewport */
+    background-image: linear-gradient(rgba(2, 6, 23, 0.75), rgba(2, 6, 23, 0.75)), 
+                      url('https://images.unsplash.com/photo-1451187580459-43490279c0fa?auto=format&fit=crop&q=80&w=2072');
+    background-size: cover;
+    background-position: center;
+    background-attachment: fixed;
+    color: var(--white);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 100vh;
+    padding: 20px;
+    overflow-x: hidden;
+}
 
-        <section class="card-painel">
-            <div class="search-controls">
-                <label for="position-input">Insira a posição (começando em 1):</label>
-                <div class="input-group">
-                    <input type="number" id="position-input" min="1" placeholder="Ex: 10">
-                    <button id="search-btn" class="btn-primary">Buscar País</button>
-                </div>
-            </div>
+.container {
+    width: 100%;
+    max-width: 650px;
+    z-index: 10;
+    text-align: center;
+    animation: fadeIn 0.8s ease-out;
+}
 
-            <div id="result-display" class="result-display hidden">
-                <div class="flag-container">
-                    <img id="country-flag" src="" alt="Bandeira do País">
-                </div>
-                <div class="country-info">
-                    <h2 id="country-name">Nome do País</h2>
-                    <p id="position-label">Posição: #<span id="country-index"></span></p>
-                </div>
-            </div>
-            
-            <div id="message-display" class="message-display">
-                <p>Insira uma posição acima para ver a bandeira do país correspondente na lista alfabética.</p>
-            </div>
-        </section>
-    </main>
+/* Estilo do Título */
+header h1 {
+    font-size: 4rem;
+    font-weight: 900;
+    margin-bottom: 8px;
+    letter-spacing: -3px;
+}
 
-    <script src="script.js"></script>
-</body>
-</html>
+header h1 span {
+    color: var(--blue);
+    text-shadow: 0 0 25px rgba(56, 189, 248, 0.4);
+}
+
+header h1 .suffix {
+    color: var(--green);
+    text-shadow: 0 0 25px rgba(74, 222, 128, 0.4);
+}
+
+header p {
+    color: var(--white);
+    margin-bottom: 35px;
+    font-size: 1.2rem;
+    font-weight: 400;
+}
+
+/* Efeito Glassmorphism no Cartão */
+.card {
+    background: var(--card-bg);
+    backdrop-filter: blur(20px);
+    -webkit-backdrop-filter: blur(20px);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    border-radius: 32px;
+    padding: 45px;
+    box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.7);
+}
+
+.search-area {
+    text-align: left;
+    margin-bottom: 35px;
+}
+
+.search-area label {
+    display: block;
+    margin-bottom: 12px;
+    color: var(--white);
+    font-size: 1rem;
+}
+
+.input-group {
+    display: flex;
+    gap: 15px;
+}
+
+/* Estilos de Input e Botão */
+input {
+    flex: 1;
+    background: rgba(0, 0, 0, 0.4);
+    border: 2px solid rgba(255, 255, 255, 0.1);
+    border-radius: 16px;
+    padding: 16px 22px;
+    color: var(--white);
+    font-size: 1.1rem;
+    transition: all 0.3s;
+}
+
+input:focus {
+    outline: none;
+    border-color: var(--blue);
+    background: rgba(0, 0, 0, 0.6);
+    box-shadow: 0 0 0 4px rgba(56, 189, 248, 0.2);
+}
+
+button {
+    background: var(--blue);
+    color: #020617;
+    border: none;
+    padding: 0 30px;
+    border-radius: 16px;
+    font-weight: 800;
+    text-transform: uppercase;
+    cursor: pointer;
+    transition: all 0.3s;
+}
+
+button:hover {
+    background: var(--green);
+    transform: translateY(-2px);
+    box-shadow: 0 8px 20px rgba(74, 222, 128, 0.4);
+}
+
+/* Contentor de Resultados */
+#result-container {
+    margin-top: 25px;
+    min-height: 240px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    border-top: 1px solid rgba(255, 255, 255, 0.1);
+    padding-top: 30px;
+}
+
+.flag-box {
+    width: 280px;
+    height: 160px;
+    border-radius: 20px;
+    overflow: hidden;
+    box-shadow: 0 15px 35px rgba(0,0,0,0.5);
+    margin-bottom: 20px;
+    border: 4px solid var(--white);
+    background: rgba(0,0,0,0.3);
+    animation: popIn 0.6s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+}
+
+.flag-box img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+.country-details h2 {
+    font-size: 2.4rem;
+    margin-bottom: 8px;
+}
+
+.country-details p {
+    color: var(--green);
+    font-weight: 800;
+    text-transform: uppercase;
+    font-size: 0.9rem;
+    letter-spacing: 2px;
+}
+
+.placeholder-text {
+    color: var(--text-muted);
+    font-style: italic;
+}
+
+.hidden { 
+    display: none; 
+}
+
+/* Animações */
+@keyframes fadeIn {
+    from { opacity: 0; transform: translateY(15px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes popIn {
+    from { opacity: 0; transform: scale(0.9); }
+    to { opacity: 1; transform: scale(1); }
+}
+
+/* Responsividade */
+@media (max-width: 480px) {
+    .input-group { flex-direction: column; }
+    button { padding: 18px; }
+    header h1 { font-size: 2.8rem; }
+    .card { padding: 30px 20px; }
+}
