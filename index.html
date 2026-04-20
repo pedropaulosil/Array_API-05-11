@@ -1,25 +1,46 @@
 <!DOCTYPE html>
-<html lang="en">
-    
+<html lang="pt-br">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>ARRAY</title>
+    <title>Explorador de Países | Array Project</title>
     <link rel="stylesheet" href="style.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600&display=swap" rel="stylesheet">
 </head>
 <body>
-    <center>
-    <h1>ARRAY</h1>
-    
-    <div class="div-pai">
-        <div class="pais" id= "pais"></div>
-        <div id = "decimopais"></div>
-        <div id = "paisprocurado"></div>
-        <br>
-            <button id="start" class="start">
-            START
-            </button>
-    </div>
+
+    <main class="container">
+        <header>
+            <h1>Global<span>Array</span></h1>
+            <p>Manipulação dinâmica de dados geográficos</p>
+        </header>
+
+        <section class="card-painel">
+            <div class="display-group">
+                <div id="pais" class="paises-grid">
+                    <span class="placeholder">Aguardando inicialização...</span>
+                </div>
+            </div>
+
+            <div class="info-secundaria">
+                <div class="info-box">
+                    <small>Destaque (10º)</small>
+                    <div id="decimopais">-</div>
+                </div>
+                <div class="info-box">
+                    <small>Busca Específica</small>
+                    <div id="paisprocurado">-</div>
+                </div>
+            </div>
+
+            <div class="controls">
+                <button id="start" class="btn-primary">
+                    Gerar Lista de Países
+                </button>
+            </div>
+        </section>
+    </main>
+
     <script src="script.js"></script>
 </body>
 </html>
