@@ -3,40 +3,45 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Explorador de Países | Array Project</title>
+    <title>GlobalArray Explorer | Lista de Países</title>
     <link rel="stylesheet" href="style.css">
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&display=swap" rel="stylesheet">
 </head>
 <body>
+
+    <div class="planet-bg">
+        <div class="stars"></div>
+        <div class="glow"></div>
+        <div class="earth"></div>
+    </div>
 
     <main class="container">
         <header>
             <h1>Global<span>Array</span></h1>
-            <p>Manipulação dinâmica de dados geográficos</p>
+            <p>Descubra países por posição. A lista contém <strong id="total-countries">...</strong> países em <strong>ordem alfabética</strong>.</p>
         </header>
 
         <section class="card-painel">
-            <div class="display-group">
-                <div id="pais" class="paises-grid">
-                    <span class="placeholder">Aguardando inicialização...</span>
+            <div class="search-controls">
+                <label for="position-input">Insira a posição (começando em 1):</label>
+                <div class="input-group">
+                    <input type="number" id="position-input" min="1" placeholder="Ex: 10">
+                    <button id="search-btn" class="btn-primary">Buscar País</button>
                 </div>
             </div>
 
-            <div class="info-secundaria">
-                <div class="info-box">
-                    <small>Destaque (10º)</small>
-                    <div id="decimopais">-</div>
+            <div id="result-display" class="result-display hidden">
+                <div class="flag-container">
+                    <img id="country-flag" src="" alt="Bandeira do País">
                 </div>
-                <div class="info-box">
-                    <small>Busca Específica</small>
-                    <div id="paisprocurado">-</div>
+                <div class="country-info">
+                    <h2 id="country-name">Nome do País</h2>
+                    <p id="position-label">Posição: #<span id="country-index"></span></p>
                 </div>
             </div>
-
-            <div class="controls">
-                <button id="start" class="btn-primary">
-                    Gerar Lista de Países
-                </button>
+            
+            <div id="message-display" class="message-display">
+                <p>Insira uma posição acima para ver a bandeira do país correspondente na lista alfabética.</p>
             </div>
         </section>
     </main>
