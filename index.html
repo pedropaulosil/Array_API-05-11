@@ -9,14 +9,14 @@
   <style>
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
     :root {
-      --bg: #f0f6ff;
-      --surface: ##111112;
-      --blue: #1a56db;
-      --blue-dark: #1240a8;
+      --bg: #0a0a0a;
+      --surface: #111112;
+      --blue: #d8dbe2;
+      --blue-dark: #103791;
       --blue-light: #dbeafe;
       --green: #16a34a;
       --green-light: #dcfce7;
-      --text: #0f172a;
+      --text: #cacdd3;
       --muted: #64748b;
       --border: #cbd5e1;
       --sans: 'Nunito', sans-serif;
@@ -25,11 +25,11 @@
     body { background: var(--bg); color: var(--text); font-family: var(--sans); min-height: 100vh; }
 
     .topbar { background: var(--blue-dark); padding: 0.5rem 1.5rem; }
-    .topbar a { color: rgba(255,255,255,0.7); text-decoration: none; font-size: 0.78rem; font-weight: 700; transition: color 0.2s; }
+    .topbar a { color: rgba(255,255,255,0.7); text-decoration: none; font-size: 1rem; font-weight: 700; transition: color 0.2s; }
     .topbar a:hover { color: #fff; }
 
     header {
-      background: linear-gradient(135deg, #1240a8 0%, #1a56db 60%, #2563eb 100%);
+      background: linear-gradient(135deg, #1740a0 0%, #0051ff 60%, #2833c2 100%);
       color: #fff; padding: 2.5rem 2rem 2rem; text-align: center; position: relative; overflow: hidden;
     }
     header::before { content:''; position:absolute; top:-60px; right:-60px; width:220px; height:220px; border-radius:50%; background:rgba(255,255,255,0.07); }
@@ -58,8 +58,8 @@
     .grid-wrap { padding:0 1rem 2rem; }
     .grid { display:grid; grid-template-columns:repeat(auto-fill, minmax(200px,1fr)); gap:0.875rem; max-width:1400px; margin:0 auto; }
 
-    .card { background:var(--surface); border:1.5px solid var(--border); border-radius:16px; padding:1.1rem 1rem; cursor:pointer; transition:transform 0.18s, box-shadow 0.18s, border-color 0.18s; position:relative; }
-    .card:hover { transform:translateY(-3px); box-shadow:0 8px 24px rgba(26,86,219,0.15); border-color:var(--blue); }
+    .card { background:var(--surface); border:1.5px solid var(--border); border-radius:20px; padding:1.8rem 1rem; cursor:pointer; transition:transform 0.18s, box-shadow 0.18s, border-color 0.18s; position:relative; }
+    .card:hover { transform:translateY(-3px); box-shadow:0 20px 24px rgba(26,86,219,0.15); border-color:var(--blue); }
     .card-flag { font-size:2.2rem; line-height:1; margin-bottom:0.6rem; display:block; }
     .card-index { position:absolute; top:0.75rem; right:0.75rem; font-size:0.6rem; font-weight:700; color:var(--border); font-family:var(--mono); }
     .card-name { font-size:0.82rem; font-weight:700; color:var(--text); margin-bottom:0.2rem; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
@@ -76,22 +76,22 @@
     .overlay { display:none; position:fixed; inset:0; background:rgba(15,23,42,0.4); z-index:98; backdrop-filter:blur(2px); }
     .overlay.open { display:block; }
 
-    .panel { display:none; position:fixed; top:0; right:0; width:min(400px,100vw); height:100vh; background:var(--surface); border-left:1.5px solid var(--border); z-index:99; overflow-y:auto; animation:slideIn 0.22s ease; }
+    .panel { display:none; position:fixed; top:0; left:0; width:min(800px,100vw); height:100vh; background:var(--surface); z-index:99; overflow-y:auto; animation:slideIn 0.22s ease; }
     @keyframes slideIn { from{transform:translateX(30px);opacity:0} to{transform:translateX(0);opacity:1} }
     .panel.open { display:block; }
     .panel-header { background:linear-gradient(135deg,#1240a8,#1a56db); padding:1.5rem; color:#fff; }
-    .panel-close { display:flex; align-items:center; gap:6px; background:rgba(255,255,255,0.15); border:none; border-radius:8px; color:rgba(255,255,255,0.85); font-family:var(--sans); font-size:0.75rem; font-weight:700; padding:0.35rem 0.8rem; cursor:pointer; margin-bottom:1rem; transition:background 0.2s; }
+    .panel-close { display:flex; align-items:center; gap:6px; background:rgba(255,255,255,0.15); border:none; border-radius:20px; color:rgba(255,255,255,0.85); font-family:var(--sans); font-size:0.75rem; font-weight:700; padding:0.35rem 0.8rem; cursor:pointer; margin-bottom:1rem; transition:background 0.2s; }
     .panel-close:hover { background:rgba(255,255,255,0.25); }
     .panel-flag { font-size:3.5rem; line-height:1; margin-bottom:0.5rem; display:block; }
     .panel-name { font-size:1.4rem; font-weight:800; color:#fff; margin-bottom:0.15rem; }
-    .panel-native { font-size:0.82rem; color:rgba(255,255,255,0.65); font-weight:400; }
+    .panel-native { font-size:0.82rem; color:rgba(255,255,255,0.65); font-weight:800; } 
     .panel-body { padding:1.25rem 1.5rem; }
     .panel-row { display:flex; justify-content:space-between; align-items:center; padding:0.7rem 0; border-bottom:1px solid var(--border); gap:1rem; }
     .panel-row:last-child { border-bottom:none; }
-    .panel-label { font-size:0.7rem; font-weight:700; text-transform:uppercase; letter-spacing:0.08em; color:var(--muted); }
+    .panel-label { font-size:0.7rem; font-weight:10000; text-transform:uppercase; letter-spacing:0.08em; color:var(--muted); }
     .panel-val { font-size:0.82rem; font-weight:700; color:var(--text); text-align:right; }
 
-    footer { text-align:center; padding:1.5rem; font-size:0.72rem; color:var(--muted); font-weight:600; border-top:1px solid var(--border); background:var(--surface); }
+    footer { text-align:center; padding:1.5rem; font-size:0.72rem; color:var(--muted); font-weight:20000; border-top:1px solid var(--border); background:var(--surface); }
   </style>
 </head>
 <body>
@@ -100,9 +100,9 @@
 
 <header>
   <span class="header-globe">🌍</span>
-  <div class="header-badge">ARRAY — MÓDULO</div>
+  <div class="header-badge">SITE </div>
   <h1>Países do Mundo</h1>
-  <p>195 países · clique para detalhes</p>
+  <p>Informações sobre 195 países </p>
 </header>
 
 <div class="controls">
@@ -141,7 +141,7 @@
   <div class="empty" id="empty"><span>🔍</span><p>Nenhum país encontrado.</p></div>
 </div>
 
-<footer>ARRAY · Países do Mundo · <span id="yr"></span></footer>
+<footer> Informações - Países do Mundo · <span id="yr"></span></footer>
 
 <div class="overlay" id="overlay"></div>
 <div class="panel" id="panel">
@@ -158,7 +158,7 @@
     <div class="panel-row"><span class="panel-label">Área</span><span class="panel-val" id="d-area"></span></div>
     <div class="panel-row"><span class="panel-label">Idioma</span><span class="panel-val" id="d-lang"></span></div>
     <div class="panel-row"><span class="panel-label">Moeda</span><span class="panel-val" id="d-currency"></span></div>
-    <div class="panel-row"><span class="panel-label">Índice no array</span><span class="panel-val" id="d-index"></span></div>
+    
   </div>
 </div>
 
@@ -391,7 +391,7 @@ function applyFilters(){
   filtered.forEach((c,i)=>{
     const card=document.createElement('div');
     card.className='card';
-    card.innerHTML=`<span class="card-index">[${String(i).padStart(3,'0')}]</span><span class="card-flag">${c.flag}</span><div class="card-name">${c.name}</div><div class="card-capital">${c.capital}</div><div class="card-tags"><span class="tag continent">${c.continent}</span><span class="tag pop">${fmt(c.pop)} hab.</span></div>`;
+    card.innerHTML=`<span class="card-index"></span><span class="card-flag">${c.flag}</span><div class="card-name">${c.name}</div><div class="card-capital">${c.capital}</div><div class="card-tags"><span class="tag continent">${c.continent}</span><span class="tag pop">${fmt(c.pop)} hab.</span></div>`;
     card.addEventListener('click',()=>openPanel(c,i));
     grid.appendChild(card);
   });
@@ -407,7 +407,7 @@ function openPanel(c,i){
   document.getElementById('d-area').textContent=fmtArea(c.area);
   document.getElementById('d-lang').textContent=c.lang;
   document.getElementById('d-currency').textContent=c.currency;
-  document.getElementById('d-index').textContent=`[${i}]`;
+
   panel.classList.add('open');
   overlay.classList.add('open');
 }
