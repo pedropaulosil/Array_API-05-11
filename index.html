@@ -51,7 +51,7 @@
     .clear-btn:hover { border-color:var(--blue); color:var(--blue); }
 
     .stats-bar { display:flex; flex-wrap:wrap; gap:0.75rem; justify-content:center; padding:1rem 1.5rem; }
-    .stat-pill { background:var(--surface); border:1px solid var(--border); border-radius:999px; padding:0.4rem 1rem; font-size:0.78rem; font-weight:600; color:var(--muted); display:flex; align-items:center; gap:6px; }
+    .stat-pill { background:var(--surface); border:1px solid var(--border); border-radius:999px; padding:0.4rem 1rem; font-size:0.78rem; font-weight:600; color:var(--text); display:flex; align-items:center; gap:6px; }
     .stat-pill b { color:var(--blue); font-weight:800; }
     .stat-pill.green b { color:var(--green); }
 
@@ -132,7 +132,7 @@
 
 <div class="stats-bar">
   <div class="stat-pill">Exibindo <b id="count">0</b> países</div>
-  <div class="stat-pill">10º: <b id="tenth">—</b></div>
+  <div class="stat-pill">1º Resultado:<b id="tenth">—</b></div>
   <div class="stat-pill green">Encontrado: <b id="found">—</b></div>
 </div>
 
@@ -383,8 +383,8 @@ function applyFilters(){
   else if(sort==='area') filtered.sort((a,b)=>b.area-a.area);
   else filtered.sort((a,b)=>a.name.localeCompare(b.name,'pt'));
   countEl.textContent=filtered.length;
-  tenthEl.textContent=filtered[9]?filtered[9].name:'—';
-  foundEl.textContent=filtered.length===1?filtered[0].name:(filtered.length===0?'Nenhum':'—');
+  tenthEl.textContent=filtered[0]?filtered[0].name:'—';
+  foundEl.textContent=filtered.length===1?filtered[0].name:(filtered.length===0?'Nenhum':'');
   grid.innerHTML='';
   if(!filtered.length){emptyEl.style.display='block';return;}
   emptyEl.style.display='none';
